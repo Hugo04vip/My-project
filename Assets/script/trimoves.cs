@@ -13,6 +13,6 @@ public class trimoves : MonoBehaviour
 
     void Update()
     {
-        transform.trimoves(transform.position, Vector3.back speed * Time.deltaTime);
+        transform.trimoves
     }
 }
