@@ -7,6 +7,10 @@ public class Frogmove : MonoBehaviour
 
     public float runSpeed = 2;
     public float jumpSpeed = 3;
+
+    public float doubleJumpSpeed = 2.5f;
+
+    private bool canDoubleJump;
     Rigidbody2D rb2D;
 
     public bool betterJump = false;
@@ -23,6 +27,50 @@ public class Frogmove : MonoBehaviour
         rb2D = GetComponent<Rigidbody2D>();
     }
 
+    private void Update()
+    {
+        if (Input.GetKey("space"))
+        {
+            if (CheckGround.isGrounded)
+            {
+                canDoubleJump = true;
+                rb2D.velocity = new Vector2(rb2D.velocity.x, jumpSpeed);
+            }
+            else
+            {
+                if (Input.GetKeyDown("space"))
+                {
+                    if (canDoubleJump)
+                    {
+                        animator.SetBool("DoubleJump",true);
+                        rb2D.velocity = new Vector2(rb2D.velocity.x, doubleJumpSpeed);
+                        canDoubleJump=false;
+                    }
+                }
+            }
+        }
+
+        if (CheckGround.isGrounded == false)
+        {
+            animator.SetBool("Jump", true);
+            animator.SetBool("Run", false);
+        }
+        if (CheckGround.isGrounded == true)
+        {
+            animator.SetBool("Jump", false);
+            animator.SetBool("DoubleJump", false);
+            animator.SetBool("Fall",false);
+        }
+
+        if (rb2D.velocity.y<0)
+        {
+            animator.SetBool("Fall", true);
+        }
+        else
+        {
+            animator.SetBool("Fall", false);
+        }
+    }
     
     void FixedUpdate()
     {
@@ -46,10 +94,7 @@ public class Frogmove : MonoBehaviour
             animator.SetBool("Run",false);
         }
 
-        if (Input.GetKey("space") && CheckGround.isGrounded)
-        {
-            rb2D.velocity = new Vector2(rb2D.velocity.x, jumpSpeed);
-        }
+        
 
         if (betterJump)
         {
@@ -63,14 +108,6 @@ public class Frogmove : MonoBehaviour
             }
         }
 
-        if (CheckGround.isGrounded==false)
-        {
-            animator.SetBool("Jump",true);
-            animator.SetBool("Run",false);
-        }
-        if (CheckGround.isGrounded==true)
-        {
-            animator.SetBool("Jump", false);
-        }
+        
     }
 }
